@@ -1,0 +1,151 @@
+<html>
+
+
+<!--  Programmer : Maya Ahmed 
+      Codes for making a bursting bubbles Greeting card.
+      Date: "September 07 2016" -->
+
+<head>
+    <!-- fill iPhone screen with canvas -->
+    <meta name="viewport" content="width=400" />
+    <title>Pop the Bubbles</title>
+<style>
+
+
+canvas:hover{
+opacity: 0.9;
+}
+
+
+
+</style>  
+
+
+
+
+  <script type="text/javascript">
+        var can, ctx,
+            canX = [], canY = [], bubble = [],
+            mouseIsDown = 0, len = 0;
+ 
+        function init() {
+            can = document.getElementById("can");
+            ctx = can.getContext("2d");
+        
+ 
+            can.addEventListener("mousedown", mouseDown, false);
+            can.addEventListener("mousemove", mouseXY, false);
+            can.addEventListener("touchstart", touchDown, false);
+            can.addEventListener("touchend", touchUp, false);
+            can.addEventListener("touchmove", touchXY, false);
+ 
+            document.body.addEventListener("mouseup", mouseUp, false);
+            document.body.addEventListener("touchcancel", touchUp, false);
+            for (i = 0; i < 4; i++) {
+                bubble[i] = 0;
+            }
+            animate();
+        }
+ 
+        function mouseUp() {
+            mouseIsDown = 0;
+            mouseXY();
+        }
+ 
+        function mouseDown() {
+            mouseIsDown = 1;
+            mouseXY();
+        }
+ 
+        function touchDown() {
+            mouseIsDown = 1;
+            touchXY();
+        }
+ 
+        function touchUp(e) {
+            if (!e)
+                e = event;
+            len = e.targetTouches.length;
+        }
+ 
+        function mouseXY(e) {
+            if (!e)
+                e = event;
+            canX[0] = e.pageX - can.offsetLeft;
+            canY[0] = e.pageY - can.offsetTop;
+            len = 1;
+        }
+ 
+        function touchXY(e) {
+            if (!e)
+                e = event;
+            e.preventDefault();
+            len = e.targetTouches.length;
+            for (i = 0; i < len; i++) {
+                canX[i] = e.targetTouches[i].pageX - can.offsetLeft;
+                canY[i] = e.targetTouches[i].pageY - can.offsetTop;
+            }
+        }
+ 
+        function animate() {
+            
+            ctx.clearRect(0,0, can.width, can.height);
+ctx.fillStyle = "blue";
+ctx.font="30px Arial";
+ctx.shadowColor="white";
+ctx.shadowBlur=1;
+ctx.lineWidth=7;
+ctx.fillText("Happy Birthday",10,75);
+ctx.shadowBlur=0;
+ctx.fillStyle="green";
+ctx.shadowColor="white";
+ctx.shadowBlur=1;
+ctx.lineWidth=7;
+ctx.fillText("Burst some balloons",10,150);
+
+ctx.fillStyle="red";
+ctx.shadowColor="white";
+ctx.shadowBlur=1;
+ctx.lineWidth=7;
+
+
+            ctx.fillText("Have a blast",10,225); 
+            // create a path for each bubble
+            for (i = 0; i < 4; i++) {
+                bubble[i]++;
+                if (bubble[i] >= can.height + 10)
+                   bubble[i] = -10;
+                   
+                var y = bubble[i];
+                var x = (i + 1) * 50;
+                var radius = 20;
+                            if(i==0)  ctx.fillStyle = "red";
+                            if(i==1)  ctx.fillStyle = "green";
+                            if(i==2)  ctx.fillStyle = "white";
+                            if(i==3)  ctx.fillStyle = "blue";
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                ctx.closePath();
+                // test each extant touch to see if it is on the bubble
+                for (j = 0;j < len; j++) {
+                    if (ctx.isPointInPath(canX[j], canY[j]) && mouseIsDown)
+                        bubble[i] = -30;
+                }
+                ctx.fill();
+            }
+           
+           
+
+            setTimeout(animate, 40);
+        }
+
+
+
+
+    </script>
+</head>
+<body onload="init()">
+    <canvas id="can" height="300" width="300" style="background-color:black; box-shadow: 10px 10px 20px rgba(0,0,0,0.2)">
+    </canvas>
+</body>
+</html>
